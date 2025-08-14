@@ -57,10 +57,12 @@ const Home = () => {
         
         <BreakingNewsBanner breakingNews={breakingNews} />
         
-        <div className="space-y-4">
+        <div className="grid gap-4">
           {filteredNews.length > 0 ? (
             filteredNews.map((newsItem) => (
-              <NewsCard key={newsItem.id} news={newsItem} />
+              <div key={newsItem.id} className="w-full">
+                <NewsCard news={newsItem} />
+              </div>
             ))
           ) : (
             <div className="text-center py-12">
