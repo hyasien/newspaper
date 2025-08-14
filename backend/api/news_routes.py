@@ -2,8 +2,8 @@ from fastapi import APIRouter, HTTPException, BackgroundTasks
 from datetime import datetime
 from typing import List, Optional
 import logging
-from ..services.rss_service import RSSService
-from ..models.news import NewsArticle, BreakingNewsResponse
+from services.rss_service import RSSService
+from models.news import NewsArticle, BreakingNewsResponse
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
 logger = logging.getLogger(__name__)
