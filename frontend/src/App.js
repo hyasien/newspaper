@@ -1,47 +1,138 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { mockBreakingNews } from "./mock";
+import { newsAPI } from "./services/api";
 import NewsCard from "./components/NewsCard";
 import NewsHeader from "./components/NewsHeader";
 import BreakingNewsBanner from "./components/BreakingNewsBanner";
+import LoadingSpinner from "./components/LoadingSpinner";
+import ErrorMessage from "./components/ErrorMessage";
 import { Toaster } from "./components/ui/toaster";
+import { useToast } from "./hooks/use-toast";
 
 const Home = () => {
-  const [news, setNews] = useState(mockBreakingNews);
+  const [news, setNews] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("الكل");
+  const [lastUpdated, setLastUpdated] = useState(null);
+  const { toast } = useToast();
 
-  // Filter news based on search and category
-  const filteredNews = news.filter((item) => {
-    const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         item.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === "الكل" || item.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  // جلب الأخبار العاجلة
+  const fetchBreakingNews = useCallback(async (showLoading = true) => {
+    try {
+      if (showLoading) setIsLoading(true);
+      setError(null);
+      
+      const response = await newsAPI.getBreakingNews();
+      setNews(response.breaking_news || []);
+      setLastUpdated(new Date(response.last_updated));
+      
+      if (!showLoading && response.breaking_news?.length > 0) {
+        toast({
+          title: "تم تحديث الأخبار",
+          description: `تم جلب ${response.breaking_news.length} خبر عاجل`,
+          duration: 3000,
+        });
+      }
+    } catch (err) {
+      setError(err.message);
+      console.error('Error fetching breaking news:', err);
+    } finally {
+      setIsLoading(false);
+      setIsRefreshing(false);
+    }
+  }, [toast]);
 
-  // Get breaking news for banner
-  const breakingNews = news.filter(item => item.isBreaking);
+  // البحث في الأخبار
+  const searchNews = useCallback(async (query, category) => {
+    try {
+      if (!query && category === "الكل") {
+        // إذا لم يكن هناك بحث أو فلترة، اعرض جميع الأخبار
+        return;
+      }
+      
+      const response = await newsAPI.searchNews(query, category);
+      return response.results || [];
+    } catch (err) {
+      console.error('Error searching news:', err);
+      toast({
+        title: "خطأ في البحث",
+        description: err.message,
+        variant: "destructive",
+        duration: 5000,
+      });
+      return news; // إرجاع الأخبار الحالية في حالة الخطأ
+    }
+  }, [news, toast]);
 
+  // فلترة الأخبار محلياً
+  const filteredNews = React.useMemo(() => {
+    let filtered = news;
+    
+    if (searchTerm) {
+      filtered = filtered.filter((item) =>
+        item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    
+    if (selectedCategory !== "الكل") {
+      filtered = filtered.filter((item) => item.category === selectedCategory);
+    }
+    
+    return filtered;
+  }, [news, searchTerm, selectedCategory]);
+
+  // تحديث الأخبار
   const handleRefresh = async () => {
     setIsRefreshing(true);
-    // Simulate API call delay
-    setTimeout(() => {
-      // In real implementation, this would fetch from RSS feeds
-      const shuffledNews = [...mockBreakingNews].sort(() => Math.random() - 0.5);
-      setNews(shuffledNews);
-      setIsRefreshing(false);
-    }, 1000);
+    await fetchBreakingNews(false);
   };
 
-  // Auto-refresh every 5 minutes
+  // إعادة المحاولة عند حدوث خطأ
+  const handleRetry = () => {
+    fetchBreakingNews(true);
+  };
+
+  // تحميل الأخبار عند بدء التطبيق
+  useEffect(() => {
+    fetchBreakingNews(true);
+  }, [fetchBreakingNews]);
+
+  // تحديث تلقائي كل 5 دقائق
   useEffect(() => {
     const interval = setInterval(() => {
-      handleRefresh();
-    }, 300000);
+      fetchBreakingNews(false);
+    }, 300000); // 5 دقائق
+    
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchBreakingNews]);
+
+  // جميع الأخبار عاجلة (لأننا نجلب العاجل فقط)
+  const breakingNews = filteredNews;
+
+  if (isLoading && news.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="container mx-auto px-4 py-6 max-w-4xl">
+          <LoadingSpinner />
+        </div>
+      </div>
+    );
+  }
+
+  if (error && news.length === 0) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="container mx-auto px-4 py-6 max-w-4xl">
+          <ErrorMessage message={error} onRetry={handleRetry} />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
@@ -53,9 +144,19 @@ const Home = () => {
           onSearchChange={setSearchTerm}
           selectedCategory={selectedCategory}
           onCategoryChange={setSelectedCategory}
+          lastUpdated={lastUpdated}
         />
         
-        <BreakingNewsBanner breakingNews={breakingNews} />
+        <BreakingNewsBanner breakingNews={breakingNews.slice(0, 3)} />
+        
+        {error && (
+          <div className="mb-4">
+            <ErrorMessage 
+              message={`تحذير: ${error}`} 
+              onRetry={() => fetchBreakingNews(false)} 
+            />
+          </div>
+        )}
         
         <div className="grid gap-4">
           {filteredNews.length > 0 ? (
@@ -66,7 +167,11 @@ const Home = () => {
             ))
           ) : (
             <div className="text-center py-12">
-              <p className="text-gray-500 text-lg">لا توجد أخبار تطابق البحث</p>
+              {searchTerm || selectedCategory !== "الكل" ? (
+                <p className="text-gray-500 text-lg">لا توجد أخبار تطابق البحث</p>
+              ) : (
+                <p className="text-gray-500 text-lg">لا توجد أخبار عاجلة متاحة حالياً</p>
+              )}
             </div>
           )}
         </div>
@@ -74,7 +179,12 @@ const Home = () => {
         {filteredNews.length > 0 && (
           <div className="text-center mt-8">
             <p className="text-gray-500 text-sm">
-              تم عرض {filteredNews.length} خبر من أصل {news.length}
+              تم عرض {filteredNews.length} خبر عاجل من أصل {news.length}
+              {lastUpdated && (
+                <span className="block mt-1">
+                  آخر تحديث: {lastUpdated.toLocaleString('ar-EG')}
+                </span>
+              )}
             </p>
           </div>
         )}

@@ -1,10 +1,33 @@
 import React from 'react';
 import { Button } from './ui/button';
-import { RefreshCw, Filter, Search } from 'lucide-react';
+import { RefreshCw, Filter, Search, Clock } from 'lucide-react';
 import { Input } from './ui/input';
 
-const NewsHeader = ({ onRefresh, isRefreshing, searchTerm, onSearchChange, selectedCategory, onCategoryChange }) => {
-  const categories = ['الكل', 'اقتصاد', 'بيئة', 'علوم', 'تكنولوجيا', 'رياضة', 'سياسة'];
+const NewsHeader = ({ 
+  onRefresh, 
+  isRefreshing, 
+  searchTerm, 
+  onSearchChange, 
+  selectedCategory, 
+  onCategoryChange, 
+  lastUpdated 
+}) => {
+  const categories = ['الكل', 'سياسة', 'اقتصاد', 'صحة', 'علوم', 'تكنولوجيا', 'رياضة'];
+
+  const formatLastUpdated = (date) => {
+    if (!date) return '';
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / (1000 * 60));
+    
+    if (diffMins < 1) return 'الآن';
+    if (diffMins < 60) return `منذ ${diffMins} دقيقة`;
+    
+    const diffHours = Math.floor(diffMins / 60);
+    if (diffHours < 24) return `منذ ${diffHours} ساعة`;
+    
+    return date.toLocaleDateString('ar-EG');
+  };
 
   return (
     <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
@@ -13,9 +36,17 @@ const NewsHeader = ({ onRefresh, isRefreshing, searchTerm, onSearchChange, selec
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             الأخبار العاجلة
           </h1>
-          <p className="text-gray-600">
-            آخر الأخبار والتحديثات العاجلة من مصادر موثوقة
-          </p>
+          <div className="flex items-center gap-4">
+            <p className="text-gray-600">
+              آخر الأخبار العاجلة من مصادر موثوقة
+            </p>
+            {lastUpdated && (
+              <div className="flex items-center gap-1 text-sm text-gray-500">
+                <Clock className="w-4 h-4" />
+                <span>آخر تحديث: {formatLastUpdated(lastUpdated)}</span>
+              </div>
+            )}
+          </div>
         </div>
         
         <div className="flex flex-col sm:flex-row gap-3 lg:w-auto w-full">
@@ -23,7 +54,7 @@ const NewsHeader = ({ onRefresh, isRefreshing, searchTerm, onSearchChange, selec
             <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <Input
               type="text"
-              placeholder="ابحث في الأخبار..."
+              placeholder="ابحث في الأخبار العاجلة..."
               value={searchTerm}
               onChange={(e) => onSearchChange(e.target.value)}
               className="pr-10 w-full sm:w-64"
@@ -37,7 +68,7 @@ const NewsHeader = ({ onRefresh, isRefreshing, searchTerm, onSearchChange, selec
             className="flex items-center gap-2"
           >
             <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
-            تحديث
+            {isRefreshing ? 'جاري التحديث...' : 'تحديث'}
           </Button>
         </div>
       </div>
