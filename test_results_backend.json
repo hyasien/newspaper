@@ -1,0 +1,132 @@
+[
+  {
+    "test": "Health Check API",
+    "success": true,
+    "details": "API يعمل بشكل صحيح - الحالة: healthy",
+    "timestamp": "2025-08-14T13:09:03.349039",
+    "response_sample": {
+      "message": "Breaking News API is running",
+      "status": "healthy"
+    }
+  },
+  {
+    "test": "Breaking News API - شامل",
+    "success": true,
+    "details": "تم جلب 3 خبر عاجل من المصادر: BBC عربي",
+    "timestamp": "2025-08-14T13:09:04.027332",
+    "response_sample": {
+      "sample_news": {
+        "id": "4f5211fe-51c8-41a2-9188-20349b2f412e",
+        "title": "\"أطفالنا يموتون\"، أمهات سودانيات يستنجدن تحت الحصار في الفاشر",
+        "description": "تفاقمت أزمة الجوع في مدينة الفاشر السودانية المحاصرة مع نفاد الغذاء وانتشار الكوليرا، وسط اتهامات لقوات الدعم السريع باستخدام التجويع كسلاح حرب،",
+        "source": "BBC عربي",
+        "published_at": "2025-08-14T04:05:36",
+        "category": "عام",
+        "is_breaking": true,
+        "url": "https://www.bbc.com/arabic/articles/cx23ly5pveko?at_medium=RSS&at_campaign=rss",
+        "image_url": "https://ichef.bbci.co.uk/ace/ws/240/cpsprodpb/f78f/live/75542810-78a2-11f0-a975-cb151ca452f4.png",
+        "created_at": "2025-08-14T13:09:04.023527"
+      },
+      "total_count": 3,
+      "sources": [
+        "BBC عربي"
+      ]
+    }
+  },
+  {
+    "test": "Refresh News API",
+    "success": true,
+    "details": "تم بدء التحديث بنجاح: تم بدء تحديث الأخبار العاجلة",
+    "timestamp": "2025-08-14T13:09:04.039601",
+    "response_sample": {
+      "success": true,
+      "message": "تم بدء تحديث الأخبار العاجلة",
+      "timestamp": "2025-08-14T13:09:04.036642"
+    }
+  },
+  {
+    "test": "Search API - البحث بكلمة 'سودان'",
+    "success": true,
+    "details": "تم العثور على 2 نتيجة",
+    "timestamp": "2025-08-14T13:09:04.249531",
+    "response_sample": {
+      "params": {
+        "q": "سودان"
+      },
+      "count": 2,
+      "sample_result": {
+        "id": "991973e9-5b3e-4e9d-b661-dbab48316108",
+        "title": "\"أطفالنا يموتون\"، أمهات سودانيات يستنجدن تحت الحصار في الفاشر",
+        "description": "تفاقمت أزمة الجوع في مدينة الفاشر السودانية المحاصرة مع نفاد الغذاء وانتشار الكوليرا، وسط اتهامات لقوات الدعم السريع باستخدام التجويع كسلاح حرب،",
+        "source": "BBC عربي",
+        "published_at": "2025-08-14T04:05:36",
+        "category": "عام",
+        "is_breaking": true,
+        "url": "https://www.bbc.com/arabic/articles/cx23ly5pveko?at_medium=RSS&at_campaign=rss",
+        "image_url": "https://ichef.bbci.co.uk/ace/ws/240/cpsprodpb/f78f/live/75542810-78a2-11f0-a975-cb151ca452f4.png",
+        "created_at": "2025-08-14T13:09:04.245702"
+      }
+    }
+  },
+  {
+    "test": "Search API - الفلترة بفئة 'سياسة'",
+    "success": true,
+    "details": "تم العثور على 0 نتيجة",
+    "timestamp": "2025-08-14T13:09:04.349578",
+    "response_sample": {
+      "params": {
+        "category": "سياسة"
+      },
+      "count": 0,
+      "sample_result": null
+    }
+  },
+  {
+    "test": "Search API - البحث الفارغ",
+    "success": true,
+    "details": "تم العثور على 3 نتيجة",
+    "timestamp": "2025-08-14T13:09:04.442001",
+    "response_sample": {
+      "params": {},
+      "count": 3,
+      "sample_result": {
+        "id": "019fdcb6-3bce-486e-8192-5696d4908ef0",
+        "title": "\"أطفالنا يموتون\"، أمهات سودانيات يستنجدن تحت الحصار في الفاشر",
+        "description": "تفاقمت أزمة الجوع في مدينة الفاشر السودانية المحاصرة مع نفاد الغذاء وانتشار الكوليرا، وسط اتهامات لقوات الدعم السريع باستخدام التجويع كسلاح حرب،",
+        "source": "BBC عربي",
+        "published_at": "2025-08-14T04:05:36",
+        "category": "عام",
+        "is_breaking": true,
+        "url": "https://www.bbc.com/arabic/articles/cx23ly5pveko?at_medium=RSS&at_campaign=rss",
+        "image_url": "https://ichef.bbci.co.uk/ace/ws/240/cpsprodpb/f78f/live/75542810-78a2-11f0-a975-cb151ca452f4.png",
+        "created_at": "2025-08-14T13:09:04.438123"
+      }
+    }
+  },
+  {
+    "test": "Search API - البحث المركب",
+    "success": true,
+    "details": "تم العثور على 0 نتيجة",
+    "timestamp": "2025-08-14T13:09:04.533528",
+    "response_sample": {
+      "params": {
+        "q": "رئيس",
+        "category": "سياسة"
+      },
+      "count": 0,
+      "sample_result": null
+    }
+  },
+  {
+    "test": "Error Handling - 404",
+    "success": true,
+    "details": "تم التعامل مع الـ endpoint غير الموجود بشكل صحيح",
+    "timestamp": "2025-08-14T13:09:04.541132"
+  },
+  {
+    "test": "Performance Test",
+    "success": true,
+    "details": "وقت الاستجابة: 0.09 ثانية",
+    "timestamp": "2025-08-14T13:09:04.630807"
+  }
+]
