@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link, useLocation } from "react-router-dom";
 import { newsAPI } from "./services/api";
 import NewsCard from "./components/NewsCard";
 import NewsHeader from "./components/NewsHeader";
@@ -9,6 +9,9 @@ import LoadingSpinner from "./components/LoadingSpinner";
 import ErrorMessage from "./components/ErrorMessage";
 import { Toaster } from "./components/ui/toaster";
 import { useToast } from "./hooks/use-toast";
+import LebanonNews from "./pages/LebanonNews";
+import { Button } from "./components/ui/button";
+import { Globe, Zap } from "lucide-react";
 
 const Home = () => {
   const [news, setNews] = useState([]);
