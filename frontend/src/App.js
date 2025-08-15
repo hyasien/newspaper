@@ -230,7 +230,6 @@ const Home = () => {
           </div>
         )}
       </div>
-      <Toaster />
     </div>
   );
 };
