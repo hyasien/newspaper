@@ -239,9 +239,12 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
+        <Navigation />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/lebanon" element={<LebanonNews />} />
         </Routes>
+        <Toaster />
       </BrowserRouter>
     </div>
   );
