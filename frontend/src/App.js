@@ -13,6 +13,44 @@ import LebanonNews from "./pages/LebanonNews";
 import { Button } from "./components/ui/button";
 import { Globe, Zap } from "lucide-react";
 
+// Navigation Component
+const Navigation = () => {
+  const location = useLocation();
+  
+  return (
+    <nav className="bg-white shadow-sm border-b">
+      <div className="container mx-auto px-4 py-3 max-w-7xl">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Globe className="w-6 h-6 text-blue-600" />
+            <h1 className="text-xl font-bold text-gray-900">مركز الأخبار العربي</h1>
+          </div>
+          <div className="flex items-center gap-3">
+            <Link to="/">
+              <Button 
+                variant={location.pathname === '/' ? 'default' : 'ghost'}
+                className="flex items-center gap-2"
+              >
+                <Zap className="w-4 h-4" />
+                الأخبار العاجلة
+              </Button>
+            </Link>
+            <Link to="/lebanon">
+              <Button 
+                variant={location.pathname === '/lebanon' ? 'default' : 'ghost'}
+                className="flex items-center gap-2"
+              >
+                <Globe className="w-4 h-4" />
+                الصحف اللبنانية
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </nav>
+  );
+};
+
 const Home = () => {
   const [news, setNews] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
