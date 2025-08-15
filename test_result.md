@@ -306,9 +306,13 @@ metadata:
 
 test_plan:
   current_focus:
-    - "All backend APIs tested and working"
+    - "Loading and Initial News Fetch"
+    - "Breaking News Banner"
+    - "Search and Filter Functionality"
+    - "News Cards Display and Interaction"
+    - "RTL Layout and Arabic Text"
   stuck_tasks: []
-  test_all: false
+  test_all: true
   test_priority: "high_first"
 
 agent_communication:
