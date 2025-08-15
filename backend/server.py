@@ -8,6 +8,7 @@ import os
 
 # Import routes
 from api.news_routes import router as news_router
+from api.lebanon_routes import router as lebanon_router
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -29,8 +30,8 @@ async def lifespan(app: FastAPI):
 
 # Create the main app
 app = FastAPI(
-    title="Breaking News API",
-    description="API لجلب الأخبار العاجلة من مصادر RSS العربية",
+    title="Breaking News & Lebanon Headlines API",
+    description="API للأخبار العاجلة وعناوين الصحف اللبنانية",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -41,10 +42,11 @@ api_router = APIRouter(prefix="/api")
 # Health check endpoint
 @api_router.get("/")
 async def root():
-    return {"message": "Breaking News API is running", "status": "healthy"}
+    return {"message": "Breaking News & Lebanon Headlines API is running", "status": "healthy"}
 
 # Include news routes
 api_router.include_router(news_router)
+api_router.include_router(lebanon_router)
 
 # Include the router in the main app
 app.include_router(api_router)

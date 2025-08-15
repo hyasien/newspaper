@@ -57,6 +57,46 @@ export const newsAPI = {
     }
   },
 
+  // جلب عناوين الصحف اللبنانية
+  getLebanonHeadlines: async () => {
+    try {
+      const response = await apiClient.get('/lebanon/headlines');
+      return response.data;
+    } catch (error) {
+      throw new Error('فشل في جلب عناوين الصحف اللبنانية: ' + (error.response?.data?.detail || error.message));
+    }
+  },
+
+  // جلب قائمة الصحف اللبنانية
+  getLebanonNewspapers: async () => {
+    try {
+      const response = await apiClient.get('/lebanon/newspapers');
+      return response.data;
+    } catch (error) {
+      throw new Error('فشل في جلب قائمة الصحف: ' + (error.response?.data?.detail || error.message));
+    }
+  },
+
+  // تحديث عناوين الصحف اللبنانية
+  refreshLebanonHeadlines: async () => {
+    try {
+      const response = await apiClient.post('/lebanon/refresh');
+      return response.data;
+    } catch (error) {
+      throw new Error('فشل في تحديث العناوين: ' + (error.response?.data?.detail || error.message));
+    }
+  },
+
+  // جلب عناوين صحيفة محددة
+  getSpecificNewspaper: async (newspaperName) => {
+    try {
+      const response = await apiClient.get(`/lebanon/newspaper/${encodeURIComponent(newspaperName)}`);
+      return response.data;
+    } catch (error) {
+      throw new Error('فشل في جلب عناوين الصحيفة: ' + (error.response?.data?.detail || error.message));
+    }
+  },
+
   // فحص حالة الخدمة
   healthCheck: async () => {
     try {
