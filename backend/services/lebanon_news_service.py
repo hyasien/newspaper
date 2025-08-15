@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 class LebanonNewsService:
     def __init__(self):
-        # مصادر RSS للصحف اللبنانية
+        # مصادر RSS للصحف اللبنانية مع مصادر بديلة
         self.lebanon_newspapers = [
             {
                 "name": "النهار",
@@ -27,39 +27,52 @@ class LebanonNewsService:
             },
             {
                 "name": "الجمهورية",
-                "url": "https://www.al-gomhuria.com/rss.xml",
+                "url": "https://feeds.feedburner.com/AlGomhuriaNews",
                 "category": "سياسة",
                 "website": "https://www.al-gomhuria.com"
             },
             {
                 "name": "المستقبل",
-                "url": "https://almustaqbal.com/rss.xml",
+                "url": "https://almustaqbal.com/feed",
                 "category": "سياسة",
                 "website": "https://almustaqbal.com"
             },
             {
-                "name": "اللواء",
-                "url": "https://www.alliwaa.com.lb/rss.xml",
+                "name": "اللواء", 
+                "url": "https://www.alliwaa.com.lb/feed/",
                 "category": "سياسة",
                 "website": "https://www.alliwaa.com.lb"
             },
             {
                 "name": "الديار",
-                "url": "https://www.addiyar.com/rss.xml",
+                "url": "https://www.addiyar.com/feed",
                 "category": "سياسة",
                 "website": "https://www.addiyar.com"
             },
             {
                 "name": "الجريدة",
-                "url": "https://www.aljarida.com/rss.xml",
+                "url": "https://www.aljarida.com/feeds/all.xml",
                 "category": "سياسة",
                 "website": "https://www.aljarida.com"
             },
             {
                 "name": "MTV Lebanon",
-                "url": "https://www.mtv.com.lb/rss",
+                "url": "https://www.mtv.com.lb/feed",
                 "category": "سياسة",
                 "website": "https://www.mtv.com.lb"
+            },
+            # مصادر إضافية موثوقة
+            {
+                "name": "الشرق الأوسط - لبنان",
+                "url": "https://aawsat.com/rss/lebanon",
+                "category": "سياسة",
+                "website": "https://aawsat.com"
+            },
+            {
+                "name": "الحياة - أخبار لبنان",
+                "url": "https://www.alhayat.com/rss/lebanon.xml",
+                "category": "سياسة", 
+                "website": "https://www.alhayat.com"
             }
         ]
         self.session = None
