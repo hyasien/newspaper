@@ -1,0 +1,7 @@
+[build]
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/rss"
+  to = "/.netlify/functions/rss"
+  status = 200
